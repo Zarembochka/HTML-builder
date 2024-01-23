@@ -3,25 +3,30 @@ const fsPromise = require('node:fs/promises');
 const path = require('node:path');
 
 function copyDir(pathFrom, pathTo) {
-  fs.mkdir(pathTo, { recursive: true }, () => {});
-  fs.readdir(pathTo, (err, files) => {
-    for (let i = 0; i < files.length; i += 1) {
-      const pathToFile = path.join(pathTo, files[i]);
-      fs.unlink(pathToFile, () => {});
-    }
-  });
-  fs.readdir(pathFrom, (err, files) => {
-    for (let i = 0; i < files.length; i += 1) {
-      const pathToFile = path.join(pathFrom, files[i]);
-      const pathToFileCopy = path.join(pathTo, files[i]);
-      fs.copyFile(
-        pathToFile,
-        pathToFileCopy,
-        fs.constants.COPYFILE_FICLONE,
-        () => {},
-      );
-    }
-  });
+  fs.promises
+    .mkdir(pathTo, { recursive: true }, () => {})
+    .then(() => {
+      fs.promises.readdir(pathTo).then((files) => {
+        for (let i = 0; i < files.length; i += 1) {
+          const pathToFile = path.join(pathTo, files[i]);
+          fs.unlink(pathToFile, () => {});
+        }
+      });
+    })
+    .then(() => {
+      fs.promises.readdir(pathFrom).then((files) => {
+        for (let i = 0; i < files.length; i += 1) {
+          const pathToFile = path.join(pathFrom, files[i]);
+          const pathToFileCopy = path.join(pathTo, files[i]);
+          fs.copyFile(
+            pathToFile,
+            pathToFileCopy,
+            fs.constants.COPYFILE_FICLONE,
+            () => {},
+          );
+        }
+      });
+    });
 }
 
 function buildingBundleCss(pathFrom, pathTo) {
