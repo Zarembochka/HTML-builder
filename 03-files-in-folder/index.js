@@ -13,9 +13,9 @@ function readFilesInFolder(pathToFolder) {
         const pathToFile = path.join(pathToFolder, files[i].name);
         const fileObject = path.parse(pathToFile);
         const fileName = fileObject.name;
-        if (fileName === '.gitkeep' || fileName === '.gitignore') {
-          continue;
-        }
+        // if (fileName === '.gitkeep' || fileName === '.gitignore') {
+        //   continue;
+        // }
         const fileExtension = fileObject.ext.slice(1);
         //get file size
         fs.stat(pathToFile, (err, stats) => {
